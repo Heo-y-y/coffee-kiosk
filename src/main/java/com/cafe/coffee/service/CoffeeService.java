@@ -2,10 +2,10 @@ package com.cafe.coffee.service;
 
 import com.cafe.coffee.domain.Coffee;
 import com.cafe.coffee.repository.CoffeeRepository;
-import com.cafe.coffee.dto.CoffeeCreateDto;
-import com.cafe.coffee.dto.CoffeeResponseDto;
-import com.cafe.coffee.dto.CoffeeResponseDtoList;
-import com.cafe.coffee.dto.CoffeeUpdateDto;
+import com.cafe.coffee.controller.dto.CoffeeCreateDto;
+import com.cafe.coffee.controller.dto.CoffeeResponseDto;
+import com.cafe.coffee.controller.dto.CoffeeResponseDtoList;
+import com.cafe.coffee.controller.dto.CoffeeUpdateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

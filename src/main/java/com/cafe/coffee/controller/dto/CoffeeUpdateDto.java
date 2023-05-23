@@ -1,11 +1,9 @@
-package com.cafe.coffee.dto;
+package com.cafe.coffee.controller.dto;
 
 import lombok.Getter;
 
 @Getter
-public class CoffeeCreateDto {
-
+public class CoffeeUpdateDto {
     private String name;
     private int price;
-
 }

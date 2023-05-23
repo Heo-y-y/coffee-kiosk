@@ -1,4 +1,4 @@
-package com.cafe.coffee.dto;
+package com.cafe.coffee.controller.dto;
 
 import com.cafe.coffee.domain.Coffee;
 import lombok.Getter;
