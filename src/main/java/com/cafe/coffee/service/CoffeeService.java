@@ -1,23 +1,23 @@
-package com.cafe.coffee;
+package com.cafe.coffee.service;
 
+import com.cafe.coffee.domain.Coffee;
+import com.cafe.coffee.repository.CoffeeRepository;
 import com.cafe.coffee.dto.CoffeeCreateDto;
 import com.cafe.coffee.dto.CoffeeResponseDto;
 import com.cafe.coffee.dto.CoffeeResponseDtoList;
 import com.cafe.coffee.dto.CoffeeUpdateDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
-// of 메서드 활용하기
+@RequiredArgsConstructor
 @Service
 public class CoffeeService {
 
     private final CoffeeRepository coffeeRepository;
-    public CoffeeService(CoffeeRepository coffeeRepository) {
-        this.coffeeRepository = coffeeRepository;
-    }
+
     public CoffeeResponseDto createCoffee(CoffeeCreateDto coffeeCreateDto) {
 
         Coffee coffee = new Coffee();
@@ -26,7 +26,6 @@ public class CoffeeService {
 
         coffeeRepository.save(coffee);
 
-//        CoffeeResponseDto coffeeResponseDto = coffeeToResponseDto(coffee);
         CoffeeResponseDto coffeeResponseDto = CoffeeResponseDto.of(coffee);
 
         return coffeeResponseDto;
@@ -35,17 +34,6 @@ public class CoffeeService {
         List<Coffee> coffees = coffeeRepository.findAll();
         return CoffeeResponseDtoList.of(coffees);
 
-//        CoffeeResponseDtoList coffeeResponseDtoList = new CoffeeResponseDtoList();
-//        List<CoffeeResponseDto> coffeeResponseDtoLists = new ArrayList<>();
-//        List<Coffee> coffees = new ArrayList<>();
-//        coffees.addAll(coffeeRepository.findAll());
-//        for (int i = 0; i < coffees.size(); i++) {
-//            Coffee coffee = coffees.get(i);
-//            CoffeeResponseDto coffeeResponseDto = CoffeeResponseDto.of(coffee);
-//            coffeeResponseDtoLists.add(coffeeResponseDto);
-//        }
-//        coffeeResponseDtoList.setCoffeeResponseDtoList(coffeeResponseDtoLists);
-//        return coffeeResponseDtoList;
     }
 
     public CoffeeResponseDto findCoffee(Long id) {
@@ -69,7 +57,6 @@ public class CoffeeService {
         return coffeeResponseDto;
     }
 
-
     public void deleteCoffee(Long id) {
         coffeeRepository.deleteById(id);
     }
@@ -78,17 +65,8 @@ public class CoffeeService {
         coffeeRepository.deleteAll();
     }
 
-// 반복 메서드
     private Coffee getCoffee(Long id) {
         Coffee coffee = coffeeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
         return coffee;
     }
-// 외부에서 수정할 수 있는 코드
-//    private CoffeeResponseDto coffeeToResponseDto(Coffee coffee) {
-//        CoffeeResponseDto coffeeResponseDto = new CoffeeResponseDto();
-//        coffeeResponseDto.setId(coffee.getId());
-//        coffeeResponseDto.setName(coffee.getName());
-//        coffeeResponseDto.setPrice(coffee.getPrice());
-//        return coffeeResponseDto;
-//    }
 }

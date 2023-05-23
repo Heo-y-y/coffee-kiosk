@@ -1,6 +1,6 @@
 package com.cafe.coffee.dto;
 
-import com.cafe.coffee.Coffee;
+import com.cafe.coffee.domain.Coffee;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

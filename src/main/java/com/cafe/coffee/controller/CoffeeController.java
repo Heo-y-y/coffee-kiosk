@@ -1,9 +1,10 @@
-package com.cafe.coffee;
+package com.cafe.coffee.controller;
 
 import com.cafe.coffee.dto.CoffeeCreateDto;
 import com.cafe.coffee.dto.CoffeeResponseDto;
 import com.cafe.coffee.dto.CoffeeResponseDtoList;
 import com.cafe.coffee.dto.CoffeeUpdateDto;
+import com.cafe.coffee.service.CoffeeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
