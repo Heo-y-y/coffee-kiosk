@@ -1,45 +1,39 @@
 package com.cafe.coffee.controller;
 
-import com.cafe.coffee.controller.dto.CoffeeCreateDto;
-import com.cafe.coffee.controller.dto.CoffeeResponseDto;
-import com.cafe.coffee.controller.dto.CoffeeResponseDtoList;
-import com.cafe.coffee.controller.dto.CoffeeUpdateDto;
+import com.cafe.coffee.response.CoffeeCreateResponse;
+import com.cafe.coffee.response.CoffeeMenusResponse;
+import com.cafe.coffee.response.CoffeeMenu;
+import com.cafe.coffee.response.CoffeeUpdateResponse;
 import com.cafe.coffee.service.CoffeeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping(value = "/api")
 public class CoffeeController {
-
     private final CoffeeService coffeeService;
 
-    public CoffeeController(CoffeeService coffeeService) {
-        this.coffeeService = coffeeService;
+    @PostMapping(value = "/post")
+    public ResponseEntity<CoffeeMenu> sendNewCoffee(@RequestBody CoffeeCreateResponse coffeeCreateDto) {
+        return ResponseEntity.ok(coffeeService.createCoffee(coffeeCreateDto));
     }
 
-    @PostMapping
-    public ResponseEntity<CoffeeResponseDto> createCoffee(@RequestBody CoffeeCreateDto coffeeCreateDto) {
-        CoffeeResponseDto coffeeResponseDto = coffeeService.createCoffee(coffeeCreateDto);
-        return ResponseEntity.ok(coffeeResponseDto);
+    @GetMapping(value = "/findAll")
+    public ResponseEntity<CoffeeMenusResponse> sendCoffeeMenus() {
+        return ResponseEntity.ok(coffeeService.findAllCoffees());
     }
 
-    @GetMapping
-    public ResponseEntity<CoffeeResponseDtoList> getCoffeeList() {
-        CoffeeResponseDtoList coffeeResponseDtoList = coffeeService.findCoffeeList();
-        return ResponseEntity.ok(coffeeResponseDtoList);
-    }
-// @PathVariable 만 쓰지마! 숙제
     @GetMapping("/{id}")
-    public ResponseEntity<CoffeeResponseDto> getCoffee(@PathVariable("id") Long id) {
-        CoffeeResponseDto coffeeResponseDto = coffeeService.findCoffee(id);
-        return ResponseEntity.ok(coffeeResponseDto);
+    public ResponseEntity<CoffeeMenu> sendCoffeeMenu(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(coffeeService.findCoffee(id));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CoffeeResponseDto> updateCoffee(@PathVariable("id") Long id,
-                                                          @RequestBody CoffeeUpdateDto coffeeUpdateDto) {
-        CoffeeResponseDto coffeeResponseDto = coffeeService.updateCoffee(id, coffeeUpdateDto);
-        return ResponseEntity.ok(coffeeResponseDto);
+    public ResponseEntity<CoffeeMenu> sendRevisedCoffee(@PathVariable("id") Long id,
+                                                   @RequestBody CoffeeUpdateResponse coffeeUpdateDto) {
+        return ResponseEntity.ok(coffeeService.updateCoffee(id, coffeeUpdateDto));
     }
 
     @DeleteMapping("/{id}")

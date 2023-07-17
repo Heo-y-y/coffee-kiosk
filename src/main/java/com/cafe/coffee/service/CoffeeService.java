@@ -1,72 +1,54 @@
 package com.cafe.coffee.service;
 
 import com.cafe.coffee.domain.Coffee;
+import com.cafe.coffee.response.CoffeeMenusResponse;
 import com.cafe.coffee.repository.CoffeeRepository;
-import com.cafe.coffee.controller.dto.CoffeeCreateDto;
-import com.cafe.coffee.controller.dto.CoffeeResponseDto;
-import com.cafe.coffee.controller.dto.CoffeeResponseDtoList;
-import com.cafe.coffee.controller.dto.CoffeeUpdateDto;
+import com.cafe.coffee.response.CoffeeCreateResponse;
+import com.cafe.coffee.response.CoffeeMenu;
+import com.cafe.coffee.response.CoffeeUpdateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.persistence.EntityNotFoundException;
 
 @RequiredArgsConstructor
 @Service
 public class CoffeeService {
-
     private final CoffeeRepository coffeeRepository;
 
-    public CoffeeResponseDto createCoffee(CoffeeCreateDto coffeeCreateDto) {
-
-        Coffee coffee = new Coffee();
-        coffee.setName(coffeeCreateDto.getName());
-        coffee.setPrice(coffeeCreateDto.getPrice());
-
-        coffeeRepository.save(coffee);
-
-        CoffeeResponseDto coffeeResponseDto = CoffeeResponseDto.of(coffee);
-
-        return coffeeResponseDto;
-    }
-    public CoffeeResponseDtoList findCoffeeList() {
-        List<Coffee> coffees = coffeeRepository.findAll();
-        return CoffeeResponseDtoList.of(coffees);
-
+    public CoffeeMenu createCoffee(CoffeeCreateResponse coffeeCreate) {
+        Coffee newCoffee = coffeeRepository.save(new Coffee(coffeeCreate.getName(), coffeeCreate.getPrice()));
+        return CoffeeMenu.of(newCoffee);
     }
 
-    public CoffeeResponseDto findCoffee(Long id) {
-        Coffee coffee = getCoffee(id);
-        CoffeeResponseDto coffeeResponseDto = CoffeeResponseDto.of(coffee);
-        return coffeeResponseDto;
+    public CoffeeMenusResponse findAllCoffees() {
+        return CoffeeMenusResponse.of(coffeeRepository.findAll());
+    }
+
+    public CoffeeMenu findCoffee(Long id) {
+        if (coffeeRepository.findCoffeeById(id) == null) throw new EntityNotFoundException("해당 CoffeeId가 없습니다.");
+        return CoffeeMenu.of(coffeeRepository.findCoffeeById(id));
     }
 
     @Transactional
-    public CoffeeResponseDto updateCoffee(Long id, CoffeeUpdateDto coffeeUpdateDto) {
-        Coffee coffee = getCoffee(id);
-
-        if (coffeeUpdateDto.getName() != null) {
-            coffee.setName(coffeeUpdateDto.getName());
+    public CoffeeMenu updateCoffee(Long id, CoffeeUpdateResponse coffeeUpdate) {
+        if (coffeeRepository.findCoffeeById(id) == null) throw new EntityNotFoundException("해당 CoffeeId가 없습니다.");
+        if (coffeeUpdate.getName() != null) {
+            coffeeRepository.findCoffeeById(id).setName(coffeeUpdate.getName());
         }
-        if (coffeeUpdateDto.getPrice() != 0) {
-            coffee.setPrice(coffeeUpdateDto.getPrice());
+        if (coffeeUpdate.getPrice() != 0) {
+            coffeeRepository.findCoffeeById(id).setPrice(coffeeUpdate.getPrice());
         }
-
-        CoffeeResponseDto coffeeResponseDto = CoffeeResponseDto.of(coffee);
-        return coffeeResponseDto;
+        return CoffeeMenu.of(coffeeRepository.findCoffeeById(id));
     }
 
     public void deleteCoffee(Long id) {
+        if (coffeeRepository.findCoffeeById(id) == null) throw new EntityNotFoundException("해당 CoffeeId가 없습니다.");
         coffeeRepository.deleteById(id);
     }
 
     public void deleteCoffees() {
         coffeeRepository.deleteAll();
-    }
-
-    private Coffee getCoffee(Long id) {
-        Coffee coffee = coffeeRepository.findById(id).orElseThrow(IllegalArgumentException::new);
-        return coffee;
     }
 }
